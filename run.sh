@@ -11,7 +11,7 @@ echo ------------------------------------
 
 cd build/
 make     
-sudo make install
+make install
 cd ..
 
 tools/testers/algorithm-tester.pl -alg dummyDijkstra -pguser postgres
@@ -26,3 +26,5 @@ tools/testers/algorithm-tester.pl -alg dummyDijkstra -pguser postgres
 #sh ./tools/testers/pg_prove_tests.sh vicky                                                                                                                                                                                      
 #dropdb  ___pgr___test___                                                                                                                                                                                                         
 }
+
+test_compile 5
