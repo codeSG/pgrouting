@@ -5,10 +5,10 @@
         'comment' => 'Dijkstra test for any versions.',
         'data' => [ ],
         'tests' => [qw(
-            mytest
+            doc-funnyDijkstra
             )],
         'documentation' => [qw(
-            doc-dummyDijkstra
+            doc-funnyDijkstra
             )]
     },
 
