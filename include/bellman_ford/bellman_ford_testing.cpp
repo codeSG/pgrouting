@@ -28,6 +28,30 @@ struct EdgeProperties {
 	int weight;
 };
 
+struct MyBellmanVisitor : public bellman_visitor <>
+{
+	template  < typename Edge, typename Graph >
+	void   examine_edge(Edge e, Graph & g)  const
+	{
+		std::cout << "Edge examined: " << source(e, g) << " : " << target(e, g) << " \n ";
+	}
+	template  <typename Edge, typename Graph >
+	void edge_relaxed(Edge e, Graph & g)  const
+	{
+		std::cout << "Edge relaxed:  " << source(e, g) << " : " << target(e, g) << " \n ";
+	}
+	template  <typename Edge, typename Graph >
+	void edge_minimized(Edge e, Graph & g)  const
+	{
+		std::cout << "-->>Edge minimized:  " << source(e, g) << " : " << target(e, g) << " <<--\n ";
+	}
+	template  <typename Edge, typename Graph >
+	void edge_not_minimized(Edge e, Graph & g)  const
+	{
+		std::cout << "-->> Edge NOT minimized:  " << source(e, g) << " : " << target(e, g) << " <<-- \n ";
+	}
+};
+
 int main()
 {
 	enum { a, b, c, d, e, N };
@@ -58,8 +82,12 @@ int main()
 
 
 
-		bool r = bellman_ford_shortest_paths(g, int(N), weight_map(weight_pmap).distance_map(&distance[0]).
-			predecessor_map(&parent[0]).root_vertex(0));
+		bool r = bellman_ford_shortest_paths(g, int(N), 
+					weight_map(weight_pmap)
+					.distance_map(&distance[0]).
+					predecessor_map(&parent[0])
+					.root_vertex(0)
+					.visitor(MyBellmanVisitor()));
 
 		
 		if (r)
