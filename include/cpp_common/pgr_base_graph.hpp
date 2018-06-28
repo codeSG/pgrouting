@@ -990,7 +990,7 @@ Pgr_base_graph< G, T_V, T_E >::graph_add_all_edge(const T &edge, bool normal) {
     boost::tie(e, inserted) =
             boost::add_edge(vm_s, vm_t, graph);
         if(edge.cost<0)
-          graph[e].cost = (-2)*edge.cost;
+          graph[e].cost = (0.5)*edge.cost;
         else
           graph[e].cost = edge.cost;
         graph[e].id = edge.id;
@@ -1000,7 +1000,7 @@ Pgr_base_graph< G, T_V, T_E >::graph_add_all_edge(const T &edge, bool normal) {
         boost::tie(e, inserted) =
             boost::add_edge(vm_t, vm_s, graph);
         if(edge.reverse_cost<0)
-          graph[e].cost = (-2)*edge.reverse_cost;
+          graph[e].cost = (0.5)*edge.reverse_cost;
         else
           graph[e].cost = edge.reverse_cost;
         
