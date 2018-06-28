@@ -208,12 +208,18 @@ class Pgr_bellman_ford : public pgrouting::Pgr_messages {
          log << std::string(__FUNCTION__) << "\n";
          
          try {
+            
              bool negative = boost::bellman_ford_shortest_paths(graph.graph, int(graph.num_vertices()),
                      boost::predecessor_map(&predecessors[0])
                      .weight_map(get(&G::G_T_E::cost, graph.graph))
                      .distance_map(&distances[0])
                      .root_vertex(source)
+                     .visitor(MyBellmanVisitor())
                      );
+             for(int i=0; i<int(graph.num_vertices()); i++)
+             {
+                log <<distances[i]<<" : "<<predecessors[i]<<"\n";
+             }
              
          } catch (boost::exception const& ex) {
              (void)ex;
@@ -233,12 +239,33 @@ class Pgr_bellman_ford : public pgrouting::Pgr_messages {
              const std::vector< V > &targets) {
         log << std::string(__FUNCTION__) << "\n";
          try {
-             boost::bellman_ford_shortest_paths(graph.graph, int(graph.num_vertices()),
+            for(int i=0; i<int(graph.num_vertices()); i++)
+             {
+                if(i == int(graph[source].id)-1)
+                    distances[i] = 0;
+                else
+                    distances[i] = 1000000000;
+             }
+            bool neg = boost::bellman_ford_shortest_paths(graph.graph, int(graph.num_vertices()),
                      boost::predecessor_map(&predecessors[0])
                      .weight_map(get(&G::G_T_E::cost, graph.graph))
                      .distance_map(&distances[0])
-                     .root_vertex(source)
+                    // .root_vertex(source)
+                     .visitor(MyBellmanVisitor())
                      );
+          if(neg == true)
+             for(int i=0; i<int(graph.num_vertices()); i++)
+             {
+                log<< "no cycle\n";
+                log <<distances[i]<<" : "<<predecessors[i]<<"\n";
+             }
+            else
+                for(int i=0; i<int(graph.num_vertices()); i++)
+             {
+                log << "neative cycle\n";
+                log <<distances[i]<<" : "<<predecessors[i]<<"\n";
+             }
+             
          } catch (boost::exception const& ex) {
              (void)ex;
              throw;
@@ -257,6 +284,7 @@ class Pgr_bellman_ford : public pgrouting::Pgr_messages {
          predecessors.clear();
          distances.clear();
      }
+
 
 
      // used when multiple goals
@@ -281,7 +309,6 @@ class Pgr_bellman_ford : public pgrouting::Pgr_messages {
 
      //! @name members
      //@{
-     struct found_goals{};  //!< exception for termination
      std::vector< V > predecessors;
      std::vector< double > distances;
      
@@ -291,37 +318,41 @@ class Pgr_bellman_ford : public pgrouting::Pgr_messages {
 
      //! @name Stopping classes
      //@{
+     class MyBellmanVisitor : public boost::bellman_visitor<>, public pgrouting::Pgr_messages
+        {
+        public:
+            template <class B_G>
+            void examine_edge(E e, B_G& g) const
+            {
+                log << std::string(__FUNCTION__) << "\n";
+                log << "Edge examined: " << source(e, g) << " : " << target(e, g) << " \n ";
+            }
+            template <class B_G>
+            void edge_relaxed(E e, B_G &g)  const
+            {
+                log << std::string(__FUNCTION__) << "\n";
+                log << "Edge relaxed:  " << source(e, g) << " : " << target(e, g) << " \n ";
+            }
+            template <class B_G>
+            void edge_not_relaxed(E e, B_G &g)  const
+            {
+                log << std::string(__FUNCTION__) << "\n";
+                log << "Edge not relaxed:  " << source(e, g) << " : " << target(e, g) << " \n ";
+            }
+            template <class B_G>
+            void edge_minimized(E e, B_G &g)  const
+            {
+                log << std::string(__FUNCTION__) << "\n";
+                log << "-->>Edge minimized:  " << source(e, g) << " : " << target(e, g) << " <<--\n ";
+            }
+            template <class B_G>
+            void edge_not_minimized(E e, B_G &g) const
+            {
+                log << std::string(__FUNCTION__) << "\n";
+                log << "-->> Edge NOT minimized:  " << source(e, g) << " : " << target(e, g) << " <<-- \n ";
+            }
+        };
 
-     //! class for stopping when 1 target is found
-     class bellman_ford_one_goal_visitor : public boost::default_bellman_visitor {
-      public:
-          explicit bellman_ford_one_goal_visitor(V goal) : m_goal(goal) {}
-          template <class B_G>
-              void examine_vertex(V &u, B_G &) {
-                log << std::string(__FUNCTION__) << "\n";    
-                  if (u == m_goal) throw found_goals();
-              }
-      private:
-          V m_goal;
-     };
-
-
-     //! class for stopping when all targets are found
-     class bellman_ford_many_goal_visitor : public boost::default_bellman_visitor {
-      public:
-          explicit bellman_ford_many_goal_visitor(std::vector< V > goals)
-              :m_goals(goals.begin(), goals.end()) {}
-          template <class B_G>
-              void examine_vertex(V u, B_G &) {
-                  auto s_it = m_goals.find(u);
-                  if (s_it == m_goals.end()) return;
-                  // we found one more goal
-                  m_goals.erase(s_it);
-                  if (m_goals.size() == 0) throw found_goals();
-              }
-      private:
-          std::set< V > m_goals;
-     };
 
 
      //@}
