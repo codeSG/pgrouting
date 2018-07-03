@@ -129,6 +129,9 @@ Experimental Functions
 - :ref:`pgr_gsocvrppdtw`
 - :ref:`pgr_vrp_basic`
 
+:ref:`bellman_ford` - Return shortest path for a graph
+
+- :ref:`pgr_bellmanFord` - Return shortest path for a graph
 
 .. toctree::
   :hidden:
