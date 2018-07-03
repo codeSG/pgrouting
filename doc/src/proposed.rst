@@ -140,6 +140,7 @@ Experimental Functions
   components-family
   pgr_gsoc_vrppdtw
   pgr_vrpOneDepot
+  pgr_bellmanFord
 
 .. rubric:: Graph Operations
 
