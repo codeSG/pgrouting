@@ -114,6 +114,7 @@ Experimental Functions
 - :ref:`pgr_contractgraph` - Reduce network size using contraction techniques
 
 
+
 .. rubric:: Graph Analysis
 
 :ref:`components` - Analyze components within a graph
@@ -129,6 +130,11 @@ Experimental Functions
 - :ref:`pgr_gsocvrppdtw`
 - :ref:`pgr_vrp_basic`
 
+.. rubric:: Bellman-Ford
+
+- :ref:`pgr_bellmanFord` - Return shortest path for a undirected or directed graph
+
+
 .. toctree::
   :hidden:
 
@@ -137,6 +143,7 @@ Experimental Functions
   pgr_gsoc_vrppdtw
   pgr_vrpOneDepot
   pgr_bellmanFord
+  
 
 .. rubric:: Graph Operations
 

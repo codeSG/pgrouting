@@ -7,7 +7,7 @@
     Alike 3.0 License: http://creativecommons.org/licenses/by-sa/3.0/
    ****************************************************************************
 
-.. _pgrBellmanFord:
+.. _pgr_bellmanFord:
 
 pgr_bellmanFord - Experimental
 ===============================================================================
